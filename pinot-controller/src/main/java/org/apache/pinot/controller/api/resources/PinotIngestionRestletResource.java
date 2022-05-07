@@ -50,6 +50,7 @@ import org.apache.pinot.spi.data.Schema;
 import org.apache.pinot.spi.utils.CommonConstants;
 import org.apache.pinot.spi.utils.JsonUtils;
 import org.apache.pinot.spi.utils.builder.TableNameBuilder;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.server.ManagedAsync;
 import org.slf4j.Logger;
@@ -194,6 +195,10 @@ public class PinotIngestionRestletResource {
         });
     Schema schema = _pinotHelixResourceManager.getTableSchema(tableNameWithType);
 
+    LOGGER.info(">> logging config");
+    LOGGER.info(_controllerConf.toString());
+    LOGGER.info(">> logging whole object");
+    LOGGER.info(new ObjectMapper().writeValueAsString(_controllerConf.toMap()));
     FileIngestionHelper fileIngestionHelper =
         new FileIngestionHelper(tableConfig, schema, batchConfigMap, getControllerUri(),
             new File(_controllerConf.getDataDir(), UPLOAD_DIR), getAuthToken());

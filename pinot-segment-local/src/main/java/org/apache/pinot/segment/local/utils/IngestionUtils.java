@@ -65,6 +65,8 @@ import org.apache.pinot.spi.utils.IngestionConfigUtils;
 import org.apache.pinot.spi.utils.builder.TableNameBuilder;
 import org.apache.pinot.spi.utils.retry.AttemptsExceededException;
 import org.apache.pinot.spi.utils.retry.RetriableOperationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -73,6 +75,8 @@ import org.apache.pinot.spi.utils.retry.RetriableOperationException;
 public final class IngestionUtils {
 
   private static final PinotFS LOCAL_PINOT_FS = new LocalPinotFS();
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(IngestionUtils.class);
 
   private IngestionUtils() {
   }
@@ -195,6 +199,10 @@ public final class IngestionUtils {
       throws Exception {
 
     SegmentGenerationJobSpec segmentUploadSpec = generateSegmentUploadSpec(tableNameWithType, batchConfig, authContext);
+
+    LOGGER.info(">>> logging SegmentGenerationJobSpec");
+    LOGGER.info(segmentUploadSpec.toJSONString(false));
+
 
     List<String> segmentTarURIStrs = segmentTarURIs.stream().map(URI::toString).collect(Collectors.toList());
     String pushMode = batchConfig.getPushMode();
